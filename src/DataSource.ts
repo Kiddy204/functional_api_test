@@ -2,15 +2,14 @@ import { Client } from 'pg';
 export type DataSource<T> = {
     save: (collectionName: string, elements: T | T[]) => Promise<void>;
     show: (collectionName: string) => Promise<T[]>;
+    clear: (collectionName: string) => Promise<void>;
 };
 
 export class InMemoryDataSource<T> implements DataSource<T> {
     private db: Record<string, T[]>;
-
     constructor() {
         this.db = {};
     }
-
     async save(collectionName: string, elements: T | T[]): Promise<void> {
         if (!Array.isArray(elements)) {
             elements = [elements];
@@ -20,14 +19,15 @@ export class InMemoryDataSource<T> implements DataSource<T> {
         }
         this.db[collectionName].push(...elements);
     }
-
     async show(collectionName: string): Promise<T[]> {
         return this.db[collectionName] || [];
+    }
+    async clear(collectionName: string): Promise<void> {
+        this.db[collectionName]=[]
     }
 }
 export class PostgresDataSource<T> implements DataSource<T> {
     private client: Client;
-
     constructor(clientConfig: {
         user: string,
         host: string,
@@ -74,5 +74,11 @@ export class PostgresDataSource<T> implements DataSource<T> {
         const selectQuery = `SELECT data FROM ${collectionName}`;
         const res = await this.client.query(selectQuery);
         return res.rows.map(row => row.data);
+    }
+
+    async clear(collectionName: string): Promise<void> {
+        await this.ensureTableExists(collectionName);
+        const deleteQuery = `DELETE FROM ${collectionName};`;
+        await this.client.query(deleteQuery);
     }
 }
