@@ -1,9 +1,16 @@
 {
     "scripts": {
-        "start": "tsc && node dist/app.js"
+        "start": "tsc && node dist/v4/app.js"
     },
     "dependencies": {
-        "pg": "^8.11.5",
+        "pg": "^8.12.0",
+        "psql": "^0.0.1",
+        "reflect-metadata": "^0.2.2",
+        "typeorm": "^0.3.20",
         "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/faker": "^6.6.9",
+        "faker": "^5.5.3"
     }
 }
