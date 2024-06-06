@@ -1,5 +1,18 @@
 import faker from 'faker';
 import { Education, FieldOfStudy, Industry, Skill, TalentProfile, WorkExperience } from '../entities';
+enum SkillENUM {
+    ANALYTICAL_PROBLEM_SOLVING = "Analytical Problem Solving",
+    COMMUNICATION = "Communication",
+    CREATIVITY = "Creativity",
+    CRITICAL_THINKING = "Critical Thinking",
+    LEADERSHIP = "Leadership",
+    MANAGEMENT = "Management",
+    NEGOTIATION = "Negotiation",
+    ORGANIZATIONAL_SKILLS = "Organizational Skills",
+    PROBLEM_SOLUTION = "Problem Solution",
+    PROJECT_MANAGEMENT = "Project Management",
+    TEAMWORK = "Teamwork"
+}
 
 export async function createFakeTalentProfiles(count: number): Promise<TalentProfile[]> {
     const talentProfiles: TalentProfile[] = [];
@@ -62,7 +75,9 @@ async function createFakeSkills(profile: TalentProfile): Promise<Skill[]> {
     const count = faker.datatype.number({ min: 2, max: 4 });
     for (let i = 0; i < count; i++) {
         const skill = new Skill();
-        skill.name = faker.name.jobTitle();
+        const randomSkillKey = Object.keys(SkillENUM)[Math.floor(Math.random() * Object.keys(SkillENUM).length)];
+
+        skill.name = SkillENUM[randomSkillKey];
         skill.endorsements = faker.datatype.number({ min: 0, max: 100 });
         skill.score = faker.datatype.number({ min: 0, max: 100 });
 

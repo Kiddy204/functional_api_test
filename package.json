@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "tsc && node dist/v4/app.js"
+        "start": "tsc && node dist/v4/app"
     },
     "dependencies": {
         "pg": "^8.12.0",

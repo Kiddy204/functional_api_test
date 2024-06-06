@@ -11,32 +11,12 @@ export interface ShowQueryParams<T> {
     take?: number;
 }
 
-// export async function save<T extends BaseEntityWithTimestamps>(
-//     dataSource: DataSource,
-//     entity: { new(): T },
-//     data: DeepPartial<T> | DeepPartial<T>[]
-// ): Promise<T | T[]> {
-//     const repository: Repository<T> = dataSource.getRepository(entity);
-
-//     if (Array.isArray(data)) {
-//         // Perform upsert for multiple entities
-//         const entities = data.map(item => repository.create(item));
-//         return await repository.save(entities);
-//     } else {
-//         // Perform upsert for a single entity
-//         const entityInstance = repository.create(data);
-//         return await repository.save(entityInstance);
-//     }
-// }
 export async function save<T extends BaseEntityWithTimestamps>(
     dataSource: DataSource,
     entity: { new(): T },
     data: DeepPartial<T> | DeepPartial<T>[]
 ): Promise<T | T[]> {
     const repository: Repository<T> = dataSource.getRepository(entity);
-
-    // console.log("Saving data:", JSON.stringify(data, null, 2)); // Log data for debugging
-
     try {
         if (Array.isArray(data)) {
             const entities = data.map(item => repository.create(item));
@@ -96,7 +76,6 @@ export async function clear<T extends BaseEntityWithTimestamps>(
     dataSource: DataSource,
     entity: { new(): T }
 ): Promise<void> {
-    // const repository: Repository<T> = dataSource.getRepository(entity);
     const entityName = dataSource.getRepository(entity).metadata.tableName;
 
     await dataSource.query(`TRUNCATE TABLE "${entityName}" CASCADE`);

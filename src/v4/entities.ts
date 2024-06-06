@@ -23,51 +23,51 @@ export enum FieldOfStudy {
     BusinessAdministration = "BusinessAdministration",
 }
 
-export abstract class BaseEntityWithTimestamps extends BaseEntity {
+export abstract class BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id?: string;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at?: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updated_at?: Date;
 }
 
 @Entity()
 export class TalentProfile extends BaseEntityWithTimestamps {
     @Column()
-    name: string;
+    name?: string;
 
     @Column({ nullable: true })
-    headline: string;
+    headline?: string;
 
     @Column('text', { nullable: true })
-    summary: string;
+    summary?: string;
 
     @Column({ nullable: true })
-    profilePicture: string;
+    profilePicture?: string;
 
     @OneToMany(
         () => WorkExperience, workExperience => workExperience.profile,
         {cascade: true, eager: true}
     )
-    workExperience: WorkExperience[];
+    workExperience?: WorkExperience[];
 
     @OneToMany(
         () => Education, education => education.profile,
         { cascade: true, eager: true}
     )
-    education: Education[];
+    education?: Education[];
 
     @OneToMany(
         () => Skill, skill => skill.profile,
         { cascade: true, eager: true}
     )
-    skills: Skill[];
+    skills?: Skill[];
 
-    @Column()
-    interactionCount: number;
+    @Column({nullable: true})
+    interactionCount?: number;
 }
 
 @Entity()
