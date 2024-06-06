@@ -99,7 +99,6 @@ async function demo() {
     const avgSkillScore = await show(PgDataSource, Skill, {
         query: averageScoresQuery
     });
-    // console.log(talents)
     console.log('TALENTS')
     console.table(talents)
 

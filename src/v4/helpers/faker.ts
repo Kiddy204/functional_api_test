@@ -25,7 +25,6 @@ export async function createFakeTalentProfiles(count: number): Promise<TalentPro
         talentProfile.profilePicture = faker.image.avatar();
         talentProfile.interactionCount = faker.datatype.number({ min: 0, max: 1000 });
         
-        // Relationships are left empty
         talentProfile.workExperience = [];
         talentProfile.education = [];
         talentProfile.skills = [];

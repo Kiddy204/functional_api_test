@@ -16,7 +16,7 @@ export const PgDataSource = new DataSource({
     username: "dev",
     password: "dev",
     database: "test",
-    synchronize: true, // Set to false in production
+    synchronize: true,
     logging: false,
     entities: [TalentProfile, WorkExperience, Education, Skill],
     migrations: [],

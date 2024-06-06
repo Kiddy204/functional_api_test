@@ -3,9 +3,6 @@ import { PgDatastore } from "./PgDatastore";
 import { save, show, remove, clear } from "./api";
 import { CompanySize, Provider, Talent } from "./interface";
 
-// To do 
-// - handle nested objects
-// - handle PostgresDB Memory
 const dataSource = new InMemoryDataStore<Talent>('talents');
 
 const talentsArray: Talent[] = [
@@ -161,8 +158,7 @@ async function testInMemoryDB() {
     await save(providerDataSource, upsertProviders);
     await remove(providerDataSource, ['1', '4', '4']);
     const res = await show(providerDataSource);
-    // console.log(res);
-    // const res = await show(dataSource)
+
     console.log(res)
 }
 const talentDataSource = new PgDatastore<Talent>('talents');
@@ -172,8 +168,6 @@ async function testPgDb(){
         await save(talentDataSource, talentsArray)
         await save(talentDataSource, talentObject)
         await save(talentDataSource, upsertTalents)
-        // await remove(talentDataSource, ['2','3','4'])
-        // await clear(talentDataSource)
         const res = await show(talentDataSource)
         console.log(res)
     } catch(e) {
@@ -182,14 +176,4 @@ async function testPgDb(){
 
 }
 
-// testInMemoryDB()
 testPgDb();
-
-
-// Remianing Questions
-// - RelationShips and Nested Objects
-// - What Reflexive view we could have
-//    - Generate Reflexive Abstraction views: 
-//    - Profile Completeness Score: 
-//    - Common Career Paths
-//    - Profile Activity Insights

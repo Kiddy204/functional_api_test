@@ -35,10 +35,10 @@ export class InMemoryDataStore<T extends Entity> implements DataStore<T> {
             console.log('FOR')
             if (indexMap.has(element.id)) {
                 const index = indexMap.get(element.id)!;
-                collection[index] = element; // Update existing element
+                collection[index] = element;
             } else {
                 indexMap.set(element.id, collection.length);
-                collection.push(element); // Add new element
+                collection.push(element);
             }
         }
         console.log('OUT')
