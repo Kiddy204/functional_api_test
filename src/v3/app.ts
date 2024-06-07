@@ -60,8 +60,6 @@ const upsertTalents = [
         updated_at: new Date()
     }
 ]
-const providerDataSource = new InMemoryDataStore<Provider>('providers');
-
 const providersArray: Provider[] = [
     {
         id: '1',
@@ -110,7 +108,6 @@ const providersArray: Provider[] = [
         updated_at: new Date()
     }
 ];
-
 const providerObject = {
     id: '3',
     name: 'Provider Three',
@@ -149,9 +146,10 @@ const upsertProviders: Provider[] = [
 ];
 
 
+const providerDataSource = new InMemoryDataStore<Provider>('providers');
+
 
 async function testInMemoryDB() {
-
 
     await save(providerDataSource, providersArray);
     await save(providerDataSource, providerObject);

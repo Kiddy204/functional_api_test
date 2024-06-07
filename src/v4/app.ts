@@ -44,15 +44,48 @@ const educationalImpactAnalysis = async (dataSource) => {
 };
 
 
-async function getAverageTurnaroundByIndustry(dataSource: DataSource): Promise<any[]> {
+async function getAverageTurnoverByIndustry(dataSource: DataSource): Promise<any[]> {
     return await show(dataSource, WorkExperience, {
         query: (query) => query
             .select("entity.industry", "industry")
-            .addSelect("AVG(DATE_PART('day', entity.endDate - entity.startDate))", "averageTurnaround")
+            .addSelect("AVG(DATE_PART('day', COALESCE(entity.endDate, CURRENT_DATE) - entity.startDate))", "averageTurnover")
             .groupBy("entity.industry")
     });
 }
 
+async function getAverageTurnoverByIndustry2(dataSource: DataSource): Promise<any[]> {
+    const workExperiences: WorkExperience[] = await show(dataSource, WorkExperience, {
+        select: ['industry', 'startDate', 'endDate']
+    });
+
+    const turnoverByIndustry: { [industry: string]: number[] } = {};
+
+    workExperiences.forEach(workExperience => {
+        const startDate = new Date(workExperience.startDate);
+        const endDate = new Date(workExperience.endDate || new Date()); // Use current date if endDate is null
+        const turnoverTime = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24); // Convert milliseconds to days
+
+        if (!turnoverByIndustry[workExperience.industry]) {
+            turnoverByIndustry[workExperience.industry] = [];
+        }
+
+        turnoverByIndustry[workExperience.industry].push(turnoverTime);
+    });
+
+    // Step 3: Calculate average turnover time by industry
+    const averageTurnoverByIndustry: any[] = Object.entries(turnoverByIndustry).map(
+        ([industry, turnoverTimes]) => {
+            const totalTurnover = turnoverTimes.reduce((sum, time) => sum + time, 0);
+            const averageTurnover = totalTurnover / turnoverTimes.length;
+            return {
+                industry,
+                averageTurnover
+            };
+        }
+    );
+
+    return averageTurnoverByIndustry;
+}
 
 
 export const list = async (entity: string): Promise<any> => {
@@ -123,9 +156,14 @@ async function demo() {
     console.log('INDUSTRIES IMPACT')
     console.table(industry_engagement)
 
-    console.log('AVERAGE  TURNAROUND')
-    const averageTurnaroundByIndustry = await getAverageTurnaroundByIndustry(PgDataSource);
-    console.table(averageTurnaroundByIndustry);
+    console.log('AVERAGE  TURNOVER BY INDUSTRY 2')
+    const averageTurnoverByIndustry2 = await getAverageTurnoverByIndustry2(PgDataSource);
+    console.table(averageTurnoverByIndustry2);
+
+
+    console.log('AVERAGE  TURNOVER BY INDUSTRY')
+    const averageTurnoverByIndustry = await getAverageTurnoverByIndustry(PgDataSource);
+    console.table(averageTurnoverByIndustry);
 }
 
 demo()
